@@ -70,7 +70,7 @@
     }
 
     class Hoop {
-      constructor(physics, ballArray) {
+      constructor(physics) {
         // create backboard and ground
         let pole = physics.Bodies.rectangle(650, 150, 20, 150, {isStatic: true});
         let rim1 = physics.Bodies.rectangle(635, 200, 10, 5, { isStatic: true });
@@ -79,15 +79,22 @@
         // add all of the bodies to the world
         physics.World.add(physics.engine.world, [pole, rim1, rim2, ground]);
         this.physics = physics;
-        this.ballArray = ballArray;
+        this.ballArray = [];
         this.basketsMade = [];
+      }
+      removeBasketsMade () {
+        this.basketsMade = [];
+        this.ballArray = [];
       }
       step () {
         //Checks to see if ball exists
-        if (this.physics.engine.world.bodies[4]) {
+        if (this.ballArray.length > 0) {
         //Checks to see if basket was made
+        console.log(this.ballArray.length);
+
           for (let i = 0; i < this.ballArray.length; i++) {
             if (this.physics.Matter.Bounds.contains(this.ballArray[i].body.bounds, {x: 600, y: 220})) {
+              console.log("scored");
               if (!this.basketsMade.includes(this.ballArray[i].body.id)) {
                 this.basketsMade.push(this.ballArray[i].body.id);
               }
@@ -109,7 +116,7 @@
         let gameOver = false
         let queue = [];
         let ballArray = [];
-        let hoop = new Hoop(physicsWrapper, ballArray);
+        let hoop = new Hoop(physicsWrapper);
         let power = 0
         powerMeter();
         queue.push(physicsWrapper);
@@ -119,13 +126,14 @@
 
 
         function shootBall () {
-          let ball = new Ball(stage, (.025 + (power / 10000)), physicsWrapper)
+          let ball = new Ball(stage, (.025 + (power / 10000)), physicsWrapper, hoop)
+          hoop.ballArray.push(ball);
           ballArray.push(ball);
           queue.push(ball);
         }
 
         function removeAllBalls () {
-          for(let i = 0; i < ballArray.length; i++) {
+          for(let i = 0; i < hoop.ballArray.length; i++) {
             ballArray[i].removeBall();
           }
         }
@@ -153,7 +161,7 @@
           	}
             $( ".powerMeter" ).val( power );
             $("#score").val(hoop.basketsMade.length);
-          }, 10);
+          }, 8 );
         }
 
 
@@ -161,13 +169,14 @@
         $(window).keypress(function (e) {
           if (e.keyCode === 0 || e.keyCode === 32) {
             e.preventDefault()
+            $("#score").val(hoop.basketsMade.length);
+
             basketsAttempted ++;
             if (gameOver === true) {
               basketsAttempted = 0
               removeAllBalls();
               gameOver = false;
-              hoop.basketsMade = [];
-              ballArray = [];
+              hoop.removeBasketsMade();
               //need to unhide css power bar
             } else if (basketsAttempted > 10) {
             } else if (basketsAttempted < 10) {
@@ -179,9 +188,6 @@
             }
           }
         })
-
-
-
 
 
         // stage.update();
