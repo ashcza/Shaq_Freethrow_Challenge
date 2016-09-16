@@ -2,10 +2,8 @@
   <head>
     <script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.10.0/matter.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script>
-    // this is the ball code
-
-
 
     class Ball {
 
@@ -53,24 +51,16 @@
           element: document.body,
           engine: this.engine
         });
-
         // run the renderer
         this.Render.run(this.render);
-
       }
 
       step () {
-
         //step forward the physics engine
         this.Engine.update(this.engine);
       }
 
       draw () {
-
-      }
-
-      register () {
-
       }
 
     }
@@ -87,7 +77,6 @@
         this.physics = physics;
         this.ballArray = ballArray;
       }
-
       step () {
         //Checks to see if ball exists
         if (this.physics.engine.world.bodies[4]) {
@@ -101,7 +90,6 @@
 
         }
       }
-
       draw () {
       }
     }
@@ -113,20 +101,26 @@
         var queue = [];
         var ballArray = [];
 
+        queue.push(physicsWrapper);
+        queue.push(new Hoop(physicsWrapper, ballArray));
+
+
         function shootBall () {
           var ball = new Ball(stage, .0315, physicsWrapper)
           ballArray.push(ball);
           queue.push(ball);
         }
-        shootBall();
-        queue.push(physicsWrapper);
-        queue.push(new Hoop(physicsWrapper, ballArray));
-
-        var ballQueue = [];
 
 
 
 
+
+        $(window).keypress(function (e) {
+          if (e.keyCode === 0 || e.keyCode === 32) {
+            e.preventDefault()
+            shootBall();
+          }
+        })
 
 
 
