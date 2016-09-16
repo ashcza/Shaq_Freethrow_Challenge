@@ -25,6 +25,7 @@
       }
 
       removeBall() {
+        this.stage.removeChildAt(this.stage.children.length - 1);
         Matter.World.remove(this.physics.engine.world, this.physics.engine.world.bodies[this.physics.engine.world.bodies.length - 1])
       }
 
@@ -144,6 +145,8 @@
               basketsAttempted = 0
               removeAllBalls();
               gameOver = false;
+              hoop.basketsMade = [];
+              ballArray = [];
             } else if (basketsAttempted > 10) {
             } else if (basketsAttempted < 10) {
               shootBall();
