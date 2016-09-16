@@ -8,6 +8,7 @@
     class Ball {
 
       constructor(stage, force, physics) {
+        console.log("constructor");
 
         // adds the ball to the physics engine (x, y, radius)
         this.physics = physics;
@@ -22,11 +23,7 @@
 
       addForce(dx, dy) {
         this.physics.Matter.Body.applyForce(this.body, this.body.position, {x: dx, y: dy});
-      }
-
-      removeBall() {
-        Matter.World.remove(this.physics.engine.world, this.physics.engine.world.bodies[this.physics.engine.world.bodies.length - 1])
-      }
+            }
 
       step() {
       };
@@ -71,10 +68,10 @@
     class Hoop {
       constructor(physics, ballArray) {
         // create backboard and ground
-        let pole = physics.Bodies.rectangle(650, 150, 20, 150, {isStatic: true});
-        let rim1 = physics.Bodies.rectangle(635, 200, 10, 5, { isStatic: true });
-        let rim2 = physics.Bodies.rectangle(580, 200, 5, 5, { isStatic: true });
-        let ground = physics.Bodies.rectangle(400, 480, 810, 60, { isStatic: true });
+        var pole = physics.Bodies.rectangle(650, 150, 20, 150, {isStatic: true});
+        var rim1 = physics.Bodies.rectangle(635, 200, 10, 5, { isStatic: true });
+        var rim2 = physics.Bodies.rectangle(580, 200, 5, 5, { isStatic: true });
+        var ground = physics.Bodies.rectangle(400, 480, 810, 60, { isStatic: true });
         // add all of the bodies to the world
         physics.World.add(physics.engine.world, [pole, rim1, rim2, ground]);
         this.physics = physics;
@@ -87,6 +84,7 @@
         //Checks to see if basket was made
           for (var i = 0; i < this.ballArray.length; i++) {
             if (this.physics.Matter.Bounds.contains(this.ballArray[i].body.bounds, {x: 600, y: 220})) {
+              console.log("Basket Made");
               if (!this.basketsMade.includes(this.ballArray[i].body.id)) {
                 this.basketsMade.push(this.ballArray[i].body.id);
               }
@@ -104,8 +102,7 @@
 
         var physicsWrapper = new PhysicsWrapper();
         var stage = new createjs.Stage("demoCanvas");
-        var basketsAttempted = 0
-        var gameOver = false
+
         var queue = [];
         var ballArray = [];
         var hoop = new Hoop(physicsWrapper, ballArray);
@@ -119,19 +116,10 @@
           queue.push(ball);
         }
 
-        function removeAllBalls () {
-          for(var i = 0; i < ballArray.length; i++) {
-            ballArray[i].removeBall();
-          }
-        }
-        function endGame () {
-          gameOver = true;
-          console.log(hoop.basketsMade.length);
-          console.log('press spacebar for new game');
+        function getShotsMade(hoop) {
+          hoop.basketsMade.count;
         }
 
-
-        // 9 in air, spacebar, 10 in air, wait 5 seconds, display the result (hide power bar), spacebar again resets game (show power bar)
 
         // Matter.World.remove(engine.world, engine.world.bodies[4])
 
@@ -139,20 +127,7 @@
         $(window).keypress(function (e) {
           if (e.keyCode === 0 || e.keyCode === 32) {
             e.preventDefault()
-            basketsAttempted ++;
-            if (gameOver === true) {
-              basketsAttempted = 0
-              removeAllBalls();
-              gameOver = false;
-            } else if (basketsAttempted > 10) {
-            } else if (basketsAttempted < 10) {
-              shootBall();
-              console.log(basketsAttempted);
-            } else if (basketsAttempted === 10){
-              shootBall();
-              setTimeout(endGame, 4000);
-            }
-
+            shootBall();
           }
         })
 
