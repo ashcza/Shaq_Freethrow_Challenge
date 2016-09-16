@@ -86,7 +86,7 @@
         //Checks to see if ball exists
         if (this.physics.engine.world.bodies[4]) {
         //Checks to see if basket was made
-          for (var i = 0; i < this.ballArray.length; i++) {
+          for (let i = 0; i < this.ballArray.length; i++) {
             if (this.physics.Matter.Bounds.contains(this.ballArray[i].body.bounds, {x: 600, y: 220})) {
               if (!this.basketsMade.includes(this.ballArray[i].body.id)) {
                 this.basketsMade.push(this.ballArray[i].body.id);
@@ -103,25 +103,29 @@
       function game() {
 
 
-        var physicsWrapper = new PhysicsWrapper();
-        var stage = new createjs.Stage("demoCanvas");
-        var basketsAttempted = 0
-        var gameOver = false
-        var queue = [];
-        var ballArray = [];
-        var hoop = new Hoop(physicsWrapper, ballArray);
+        let physicsWrapper = new PhysicsWrapper();
+        let stage = new createjs.Stage("demoCanvas");
+        let basketsAttempted = 0
+        let gameOver = false
+        let queue = [];
+        let ballArray = [];
+        let hoop = new Hoop(physicsWrapper, ballArray);
+        let power = 0
+        powerMeter();
         queue.push(physicsWrapper);
         queue.push(hoop);
 
 
+
+
         function shootBall () {
-          var ball = new Ball(stage, .0315, physicsWrapper)
+          let ball = new Ball(stage, (.025 + (power / 10000)), physicsWrapper)
           ballArray.push(ball);
           queue.push(ball);
         }
 
         function removeAllBalls () {
-          for(var i = 0; i < ballArray.length; i++) {
+          for(let i = 0; i < ballArray.length; i++) {
             ballArray[i].removeBall();
           }
         }
@@ -129,12 +133,29 @@
           gameOver = true;
           console.log(hoop.basketsMade.length);
           console.log('press spacebar for new game');
+          //need to hide css power bar
         }
 
+        function powerMeter(){
+          let up = true;
+          let powerMeter = $(".powerMeter");
+          setInterval(() => {
+          	if (up) {
+          		power++;
+          		if (power === 100) {
+          			up = false;
+          		}
+          	} else {
+          		power --;
+          		if (power === 0) {
+          			up = true;
+          		}
+          	}
+            $( ".powerMeter" ).val( power );
+            $("#score").val(hoop.basketsMade.length);
+          }, 10);
+        }
 
-        // 9 in air, spacebar, 10 in air, wait 5 seconds, display the result (hide power bar), spacebar again resets game (show power bar)
-
-        // Matter.World.remove(engine.world, engine.world.bodies[4])
 
 
         $(window).keypress(function (e) {
@@ -147,15 +168,15 @@
               gameOver = false;
               hoop.basketsMade = [];
               ballArray = [];
+              //need to unhide css power bar
             } else if (basketsAttempted > 10) {
             } else if (basketsAttempted < 10) {
               shootBall();
               console.log(basketsAttempted);
             } else if (basketsAttempted === 10){
               shootBall();
-              setTimeout(endGame, 4000);
+              setTimeout(endGame, 6000);
             }
-
           }
         })
 
@@ -170,25 +191,25 @@
 
         function handleTick() {
 
-          for(var i = 0; i < queue.length; i+=1) {
+          for(let i = 0; i < queue.length; i+=1) {
             queue[i].step();
           }
 
-          for(var i = 0; i < queue.length; i+=1) {
+          for(let i = 0; i < queue.length; i+=1) {
             queue[i].draw();
           }
-
-
-
           //update canvas according to new physics engine calculations
           stage.update();
         }
+
+        // 9 in air, spacebar, 10 in air, wait 5 seconds, display the result (hide power bar), spacebar again resets game (show power bar)
+        // Matter.World.remove(engine.world, engine.world.bodies[4])
       }
 
     </script>
   </head>
   <body onload="game();">
     <canvas id="demoCanvas" width="640" height="480"></canvas>
-
-  </body>
+    <p id="score">0</p>
+    <meter class="powerMeter" min="0" low="30" optimum="50" high="70" max="100" value="50"></meter>  </body>
 </html>
