@@ -3,6 +3,29 @@
     <script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.10.0/matter.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+    <style>
+      .canvasContainer {
+        margin-bottom: 500px;
+      }
+      #courtCanvas {
+        z-index: 0;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+      }
+      #netCanvas {
+        z-index: 1;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+      }
+
+
+
+    </style>
+
+
     <script>
 
     class Ball {
@@ -11,9 +34,9 @@
 
         // adds the ball to the physics engine (x, y, radius)
         this.physics = physics;
-        this.body = physics.Bodies.circle(50, 200, 15)
+        this.body = physics.Bodies.circle(50, 300, 10)
         physics.World.add(physics.engine.world, [this.body]);
-        this.addForce(force, -.026);
+        this.addForce(force, -.01);
         this.body.restitution = .84;
         this.shape = new createjs.Shape();
         this.stage = stage;
@@ -33,7 +56,7 @@
       };
 
       draw() {
-        this.shape.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 15);
+        this.shape.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 10);
         this.shape.x = this.body.position.x;
         this.shape.y = this.body.position.y;
       };
@@ -72,7 +95,7 @@
     class Hoop {
       constructor(physics) {
         // create backboard and ground
-        let pole = physics.Bodies.rectangle(650, 150, 20, 150, {isStatic: true});
+        let pole = physics.Bodies.rectangle(450, 200, 20, 100, {isStatic: true});
         let rim1 = physics.Bodies.rectangle(635, 200, 10, 5, { isStatic: true });
         let rim2 = physics.Bodies.rectangle(580, 200, 5, 5, { isStatic: true });
         let ground = physics.Bodies.rectangle(400, 480, 810, 60, { isStatic: true });
@@ -111,7 +134,22 @@
 
 
         let physicsWrapper = new PhysicsWrapper();
-        let stage = new createjs.Stage("demoCanvas");
+        let stage = new createjs.Stage("courtCanvas");
+
+        let background = new Image();
+        background.src = "images/background.png"
+        let bitmap = new createjs.Bitmap(background);
+        stage.addChild(bitmap);
+        stage.update();
+
+        let netStage = new createjs.Stage("netCanvas");
+        let net = new Image();
+        net.src = "images/net.png"
+        let bitmap2 = new createjs.Bitmap(net);
+        netStage.addChild(bitmap2);
+        netStage.update();
+
+
         let basketsAttempted = 0
         let gameOver = false
         let queue = [];
@@ -126,7 +164,7 @@
 
 
         function shootBall () {
-          let ball = new Ball(stage, (.025 + (power / 10000)), physicsWrapper, hoop)
+          let ball = new Ball(stage, (.0035 + (power / 10000)), physicsWrapper, hoop)
           hoop.ballArray.push(ball);
           ballArray.push(ball);
           queue.push(ball);
@@ -169,8 +207,6 @@
         $(window).keypress(function (e) {
           if (e.keyCode === 0 || e.keyCode === 32) {
             e.preventDefault()
-            $("#score").val(hoop.basketsMade.length);
-
             basketsAttempted ++;
             if (gameOver === true) {
               basketsAttempted = 0
@@ -205,7 +241,10 @@
             queue[i].draw();
           }
           //update canvas according to new physics engine calculations
+          $("#score").html(hoop.basketsMade.length);
+
           stage.update();
+          netStage.update();
         }
 
         // 9 in air, spacebar, 10 in air, wait 5 seconds, display the result (hide power bar), spacebar again resets game (show power bar)
@@ -215,7 +254,11 @@
     </script>
   </head>
   <body onload="game();">
-    <canvas id="demoCanvas" width="640" height="480"></canvas>
-    <p id="score">0</p>
+    <div class="canvasContainer">
+      <canvas id="courtCanvas" width="640" height="480"></canvas>
+      <canvas id="netCanvas" width="640" height="480"></canvas>
+    </div>
+    <p class="basketsScored">0</p>
+    <p>baskets made</p>
     <meter class="powerMeter" min="0" low="30" optimum="50" high="70" max="100" value="50"></meter>  </body>
 </html>
