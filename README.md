@@ -6,6 +6,10 @@
 
 A javscript based game where you help Shaquille O'Neal improve his career 52.7% free throw average. Make sure to hit the spacebar at the right power level!
 
+## Technologies 
+
+Used Easel.js with Canvas to draw images and Matter.js as the physics engine. 
+
 ## Demo
 
 [Shaw Free Throw Challenge](https://ashcza.github.io/Shaq_Freethrow_Challenge/)
@@ -40,7 +44,7 @@ Located a coordinate under the rim that would only catch successful shots and ch
 
 ### Power Meter
 
-Created a power meter using HTML5 meter element. Used setInterval to update the value of the meter element every 10ms, 
+Created a power meter using HTML5 meter element. Used setInterval to update the value of the meter element every 10ms. Each iteration checked to see if the meter should be increasing or decreasing.
 
 ```
           function powerMeter(){
@@ -73,12 +77,12 @@ Created a power meter using HTML5 meter element. Used setInterval to update the 
 ```
 
 
+
+
 ## Future Features
 
 - Add basketball sprite image to ball and display rotational angle supplied by matter.js engine.
 - Add animation for Shaq prior to shooting ball.
-
-
 
 
 ### To Play Locally
