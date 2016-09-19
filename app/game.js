@@ -81,7 +81,7 @@ export default function game() {
               $(".powerMeter").val( power );
               $("#score").val(hoop.basketsMade.length);
               $("#remaining").text(basketCount());
-            }, 8 );
+            }, 10 );
           }
 
 

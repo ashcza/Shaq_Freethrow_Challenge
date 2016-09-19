@@ -159,7 +159,7 @@
 	      (0, _jquery2.default)(".powerMeter").val(power);
 	      (0, _jquery2.default)("#score").val(hoop.basketsMade.length);
 	      (0, _jquery2.default)("#remaining").text(basketCount());
-	    }, 8);
+	    }, 10);
 	  }
 
 	  (0, _jquery2.default)(window).keypress(function (e) {
