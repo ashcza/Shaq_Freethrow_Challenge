@@ -8,7 +8,7 @@ A javscript based game where you help Shaquille O'Neal improve his career 52.7% 
 
 ## Demo
 
-[Demo Link](https://ashcza.github.io/Shaq_Freethrow_Challenge/)
+[Shaw Free Throw Challenge](https://ashcza.github.io/Shaq_Freethrow_Challenge/)
 
 
 ## Some Interesting Features
