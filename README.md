@@ -1,6 +1,6 @@
 # Shaq Freethrow Challenge
 
-![screen shot](http://res.cloudinary.com/ashcon/image/upload/v1474268854/Github/shaqgif2.gif)
+![screen shot](http://res.cloudinary.com/ashcon/image/upload/v1474272815/Github/shaq3.gif)
 
 ## Description
 
@@ -11,8 +11,33 @@ A javscript based game where you help Shaquille O'Neal improve his career 52.7% 
 [Demo Link](https://ashcza.github.io/Shaq_Freethrow_Challenge/)
 
 
-## Gameplay
-- 
+## Some Interesting Features
+
+#### Scoring A Basket
+
+Defined a point under the rim and checked to see if that point overlapped any ball.
+
+```
+  step () {
+    //Checks to see if ball exists
+    if (this.ballArray.length > 0) {
+    
+    //Iterates over all balls
+      for (let i = 0; i < this.ballArray.length; i++) {
+        
+        //Checks to see if area of ball contains x,y point directly below rim
+        if (this.physics.Matter.Bounds.contains(this.ballArray[i].body.bounds, {x: 420, y: 265})) {
+          
+          //Checks to see if ball was already counted
+          if (!this.basketsMade.includes(this.ballArray[i].body.id)) {
+            this.basketsMade.push(this.ballArray[i].body.id);
+          }
+        }
+      }
+    }
+  }
+```
+
 
 
 ## Future Features
