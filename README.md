@@ -13,9 +13,9 @@ A javscript based game where you help Shaquille O'Neal improve his career 52.7% 
 
 ## Some Interesting Features
 
-#### Scoring A Basket
+### Scoring A Basket
 
-Defined a point under the rim and checked to see if that point overlapped any ball.
+Located a coordinate under the rim that would only catch successful shots and checked to see if that point overlapped any area belonging to a ball.
 
 ```
   step () {
@@ -38,6 +38,39 @@ Defined a point under the rim and checked to see if that point overlapped any ba
   }
 ```
 
+### Power Meter
+
+Created a power meter using HTML5 meter element. Used setInterval to update the value of the meter element every 10ms, 
+
+```
+          function powerMeter(){
+            let up = true;
+            
+            setInterval(() => {
+            
+            //checks to see if interval should be counting up
+            	if (up) {
+            		power++;
+            		if (power === 100) {
+            			up = false;
+            		}
+            	} else {
+            		power --;
+            		if (power === 0) {
+            			up = true;
+            		}
+            	}
+              //sets value of power meter
+              $(".powerMeter").val( power );
+              
+              //sets value of baskets scored
+              $("#score").val(hoop.basketsMade.length);
+              
+              //sets value of remaining baskets
+              $("#remaining").text(basketCount());
+            }, 10 );
+          }
+```
 
 
 ## Future Features
