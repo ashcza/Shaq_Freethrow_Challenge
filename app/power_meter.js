@@ -19,6 +19,3 @@ function powerMeter(){
 }
 
 var newMeter = new powerMeter();
-
-// Reference for meter css:
-// https://css-tricks.com/html5-meter-element/
