@@ -1,7 +1,21 @@
 module.exports = {
-  entry: "./lib/shaq.js",
+  entry: './app/shaq.js',
   output: {
-  	filename: "./lib/bundle.js"
+    path: './dist',
+  	filename: 'bundle.js'
   },
-  devtool: 'source-map',
+  resolve: {
+    extensions: [ '', '.js' ]
+  },
+  module: {
+    loaders: [{
+      test: /\.jsx?$/,
+      exclude: /node_modules/,
+      loader: 'babel-loader',
+      query: {
+        plugins: [ 'transform-runtime' ],
+        presets: [ 'es2015' ]
+      }
+    }]
+  }
 };

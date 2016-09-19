@@ -1,264 +1,162 @@
 <html>
   <head>
-    <script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.10.0/matter.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
-    <style>
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet" />
+    <style type="text/css">
+
+      p {
+        font-family: 'Press Start 2P', cursive;
+        font-size: 18px;
+        color: white;
+      }
+      body {
+        background-color: black;
+      }
       .canvasContainer {
-        margin-bottom: 500px;
+        width: 100px;
+        margin-bottom: 400px;
       }
       #courtCanvas {
         z-index: 0;
         position: absolute;
-        left: 0px;
-        top: 0px;
+        left: 100px;
+        top: 100px;
+        width: 1200px
+
       }
       #netCanvas {
         z-index: 1;
         position: absolute;
-        left: 0px;
-        top: 0px;
+        left: 100px;
+        top: 100px;
+        width: 1200px;
+      }
+      .stats {
+        z-index: 10;
+        display: flex;
+        justify-content: space-between;;
+        color: white;
+        width: 593px;
+        margin-left: 0px;
+        margin-right: 0px;
+        padding-left: 100px;
+        padding-right: 100px;
+        padding-top: 50px;
       }
 
+      .statsRight {
+        z-index: 11;
+      }
+      .gameLayout {
+        width: 1030px;
+        margin: 0 auto;
+        display: flex;
+        margin-left: 100px;
+        margin-top: 100px
+    }
 
+      .statsLeft {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .shaqImage {
+        display: block;
+        max-width: 265px;
+        max-height: 232px;
+        width: auto;
+        height: auto;
+      }
+      .subStats{
+        display: flex;
+      }
+      .instructions {
+        font-size: 24px;
+        color: white;
+        padding-left: 45px;
+        padding-top: 102px;
+      }
+
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        width: 264px;
+        margin-top: 60px;
+      }
+
+      .canvasLayout {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .endGame {
+        z-index: 12;
+        width: 700px;
+        margin: 0 auto;
+        margin-top: 18px;
+      }
+      .gameOver {
+        font-size: 32px;
+        padding-left: 59px;
+        margin-top: 58px;
+      }
+      .powerMeter {
+        width: 180px;
+        }
+      .powerMeter:-moz-meter-optimum::-moz-meter-bar {
+          background:indianred;
+      }
+      .powerMeter:-moz-meter-sub-optimum::-moz-meter-bar {
+          background: antiquewhite;
+      }
+      .powerMeter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
+          background: steelblue;
+      }
+      #remaining {
+        margin-right: 10px;
+      }
+      #score {
+        margin-right: 10px;
+      }
 
     </style>
-
-
-    <script>
-
-    class Ball {
-
-      constructor(stage, force, physics) {
-
-        // adds the ball to the physics engine (x, y, radius)
-        this.physics = physics;
-        this.body = physics.Bodies.circle(50, 300, 10)
-        physics.World.add(physics.engine.world, [this.body]);
-        this.addForce(force, -.01);
-        this.body.restitution = .84;
-        this.shape = new createjs.Shape();
-        this.stage = stage;
-        stage.addChild(this.shape);
-      }
-
-      addForce(dx, dy) {
-        this.physics.Matter.Body.applyForce(this.body, this.body.position, {x: dx, y: dy});
-      }
-
-      removeBall() {
-        this.stage.removeChildAt(this.stage.children.length - 1);
-        Matter.World.remove(this.physics.engine.world, this.physics.engine.world.bodies[this.physics.engine.world.bodies.length - 1])
-      }
-
-      step() {
-      };
-
-      draw() {
-        this.shape.graphics.beginFill("DeepSkyBlue").drawCircle(0, 0, 10);
-        this.shape.x = this.body.position.x;
-        this.shape.y = this.body.position.y;
-      };
-    }
-
-    class PhysicsWrapper {
-      constructor() {
-        this.Engine = Matter.Engine;
-        this.Render = Matter.Render;
-        this.World = Matter.World;
-        this.Bodies = Matter.Bodies;
-        this.Matter = Matter;
-        // create an engine
-        this.engine = this.Engine.create();
-        this.engine.world.gravity.y = 1;
-
-        // create a renderer
-        this.render = this.Render.create({
-          element: document.body,
-          engine: this.engine
-        });
-        // run the renderer
-        this.Render.run(this.render);
-      }
-
-      step () {
-        //step forward the physics engine
-        this.Engine.update(this.engine);
-      }
-
-      draw () {
-      }
-
-    }
-
-    class Hoop {
-      constructor(physics) {
-        // create backboard and ground
-        let pole = physics.Bodies.rectangle(450, 200, 20, 100, {isStatic: true});
-        let rim1 = physics.Bodies.rectangle(635, 200, 10, 5, { isStatic: true });
-        let rim2 = physics.Bodies.rectangle(580, 200, 5, 5, { isStatic: true });
-        let ground = physics.Bodies.rectangle(400, 480, 810, 60, { isStatic: true });
-        // add all of the bodies to the world
-        physics.World.add(physics.engine.world, [pole, rim1, rim2, ground]);
-        this.physics = physics;
-        this.ballArray = [];
-        this.basketsMade = [];
-      }
-      removeBasketsMade () {
-        this.basketsMade = [];
-        this.ballArray = [];
-      }
-      step () {
-        //Checks to see if ball exists
-        if (this.ballArray.length > 0) {
-        //Checks to see if basket was made
-        console.log(this.ballArray.length);
-
-          for (let i = 0; i < this.ballArray.length; i++) {
-            if (this.physics.Matter.Bounds.contains(this.ballArray[i].body.bounds, {x: 600, y: 220})) {
-              console.log("scored");
-              if (!this.basketsMade.includes(this.ballArray[i].body.id)) {
-                this.basketsMade.push(this.ballArray[i].body.id);
-              }
-            }
-          }
-
-        }
-      }
-      draw () {
-      }
-    }
-
-      function game() {
-
-
-        let physicsWrapper = new PhysicsWrapper();
-        let stage = new createjs.Stage("courtCanvas");
-
-        let background = new Image();
-        background.src = "images/background.png"
-        let bitmap = new createjs.Bitmap(background);
-        stage.addChild(bitmap);
-        stage.update();
-
-        let netStage = new createjs.Stage("netCanvas");
-        let net = new Image();
-        net.src = "images/net.png"
-        let bitmap2 = new createjs.Bitmap(net);
-        netStage.addChild(bitmap2);
-        netStage.update();
-
-
-        let basketsAttempted = 0
-        let gameOver = false
-        let queue = [];
-        let ballArray = [];
-        let hoop = new Hoop(physicsWrapper);
-        let power = 0
-        powerMeter();
-        queue.push(physicsWrapper);
-        queue.push(hoop);
-
-
-
-
-        function shootBall () {
-          let ball = new Ball(stage, (.0035 + (power / 10000)), physicsWrapper, hoop)
-          hoop.ballArray.push(ball);
-          ballArray.push(ball);
-          queue.push(ball);
-        }
-
-        function removeAllBalls () {
-          for(let i = 0; i < hoop.ballArray.length; i++) {
-            ballArray[i].removeBall();
-          }
-        }
-        function endGame () {
-          gameOver = true;
-          console.log(hoop.basketsMade.length);
-          console.log('press spacebar for new game');
-          //need to hide css power bar
-        }
-
-        function powerMeter(){
-          let up = true;
-          let powerMeter = $(".powerMeter");
-          setInterval(() => {
-          	if (up) {
-          		power++;
-          		if (power === 100) {
-          			up = false;
-          		}
-          	} else {
-          		power --;
-          		if (power === 0) {
-          			up = true;
-          		}
-          	}
-            $( ".powerMeter" ).val( power );
-            $("#score").val(hoop.basketsMade.length);
-          }, 8 );
-        }
-
-
-
-        $(window).keypress(function (e) {
-          if (e.keyCode === 0 || e.keyCode === 32) {
-            e.preventDefault()
-            basketsAttempted ++;
-            if (gameOver === true) {
-              basketsAttempted = 0
-              removeAllBalls();
-              gameOver = false;
-              hoop.removeBasketsMade();
-              //need to unhide css power bar
-            } else if (basketsAttempted > 10) {
-            } else if (basketsAttempted < 10) {
-              shootBall();
-              console.log(basketsAttempted);
-            } else if (basketsAttempted === 10){
-              shootBall();
-              setTimeout(endGame, 6000);
-            }
-          }
-        })
-
-
-        // stage.update();
-
-        //Update stage will render next frame
-        createjs.Ticker.addEventListener("tick", handleTick);
-
-        function handleTick() {
-
-          for(let i = 0; i < queue.length; i+=1) {
-            queue[i].step();
-          }
-
-          for(let i = 0; i < queue.length; i+=1) {
-            queue[i].draw();
-          }
-          //update canvas according to new physics engine calculations
-          $("#score").html(hoop.basketsMade.length);
-
-          stage.update();
-          netStage.update();
-        }
-
-        // 9 in air, spacebar, 10 in air, wait 5 seconds, display the result (hide power bar), spacebar again resets game (show power bar)
-        // Matter.World.remove(engine.world, engine.world.bodies[4])
-      }
-
-    </script>
   </head>
-  <body onload="game();">
-    <div class="canvasContainer">
-      <canvas id="courtCanvas" width="640" height="480"></canvas>
-      <canvas id="netCanvas" width="640" height="480"></canvas>
+  <body>
+    <div class="gameLayout">
+
+      <div class="canvasLayout">
+        <div class="stats">
+          <div class="statsLeft">
+            <p>Shot Power</p>
+            <meter class="powerMeter" min="0" low="30" optimum="50" high="70" max="100" value="50"></meter>
+          </div>
+
+          <div class="statsRight">
+            <div class="subStats">
+              <p id="remaining">0</p>
+              <p>Shots Left</p>
+            </div>
+            <div class="subStats">
+              <p id="score">0</p>
+              <p>Free Throws Made</p>
+            </div>
+          </div>
+        </div>
+        <div class="endGame">
+          <p class="gameOver">Game Over. Press Space Bar to Play Again!</p>
+        </div>
+      </div>
+
+      <div class="sidebar">
+        <img src="images/shaqlogo.png" alt="shaq" class="shaqImage"/>
+        <p class="instructions">Press Spacebar to Shoot</p>
+      <div>
     </div>
-    <p class="basketsScored">0</p>
-    <p>baskets made</p>
-    <meter class="powerMeter" min="0" low="30" optimum="50" high="70" max="100" value="50"></meter>  </body>
+
+    <div class="canvasContainer">
+      <canvas id="courtCanvas" width="1000" height="750"></canvas>
+      <canvas id="netCanvas" width="1000" height="750"></canvas>
+    </div>
+
+    <script src="dist/bundle.js"></script>
+  </body>
 </html>
