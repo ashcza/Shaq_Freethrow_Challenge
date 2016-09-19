@@ -1,4 +1,4 @@
-# Shaq Freethrow Challenge
+# Shaq Free Throw Challenge
 
 ![screen shot](http://res.cloudinary.com/ashcon/image/upload/v1474272815/Github/shaq3.gif)
 
