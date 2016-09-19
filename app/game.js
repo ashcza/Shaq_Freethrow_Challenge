@@ -66,7 +66,6 @@ export default function game() {
 
           function powerMeter(){
             let up = true;
-            let powerMeter = $(".powerMeter");
             setInterval(() => {
             	if (up) {
             		power++;

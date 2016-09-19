@@ -144,7 +144,6 @@
 
 	  function powerMeter() {
 	    var up = true;
-	    var powerMeter = (0, _jquery2.default)(".powerMeter");
 	    setInterval(function () {
 	      if (up) {
 	        power++;
@@ -43474,7 +43473,6 @@
 
 	        for (var i = 0; i < this.ballArray.length; i++) {
 	          if (this.physics.Matter.Bounds.contains(this.ballArray[i].body.bounds, { x: 420, y: 265 })) {
-	            console.log("scored");
 	            if (!this.basketsMade.includes(this.ballArray[i].body.id)) {
 	              this.basketsMade.push(this.ballArray[i].body.id);
 	            }
