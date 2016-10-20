@@ -2,6 +2,10 @@
 
 ![screen shot](http://res.cloudinary.com/ashcon/image/upload/v1474272815/Github/shaq3.gif)
 
+## Demo
+
+[Shaw Free Throw Challenge](https://ashcza.github.io/Shaq_Freethrow_Challenge/)
+
 ## Description
 
 A javscript based game where you help Shaquille O'Neal improve his career 52.7% free throw average. Make sure to hit the spacebar at the right power level!
@@ -9,11 +13,6 @@ A javscript based game where you help Shaquille O'Neal improve his career 52.7% 
 ## Technologies 
 
 Used Easel.js with Canvas to draw images and Matter.js as the physics engine. 
-
-## Demo
-
-[Shaw Free Throw Challenge](https://ashcza.github.io/Shaq_Freethrow_Challenge/)
-
 
 ## Some Interesting Features
 
